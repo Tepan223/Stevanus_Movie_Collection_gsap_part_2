@@ -92,3 +92,8 @@ h2{
   display: flex;
   justify-content: space-between;
 }
+
+.movie-card:hover {
+  transform: translateY(-5px);
+  background-color: #ee7f7f
+}

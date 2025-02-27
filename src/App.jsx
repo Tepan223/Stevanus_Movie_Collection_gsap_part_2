@@ -12,6 +12,7 @@ const App = () => {
 
   useEffect(() => {
     fetchMovies();
+    gsap.defaults({ duration: 0.2, ease: "power2.out" });
   }, []);
 
   const fetchMovies = async () => {
@@ -63,13 +64,19 @@ const App = () => {
 
   const handleMouseEnter = () => {
     if (searchButtonRef.current) {
-      gsap.to(searchButtonRef.current, { scale: 1.2, duration: 0.2 });
+      if (gsap.isTweening(searchButtonRef.current)) {
+        gsap.killTweensOf(searchButtonRef.current);
+      }
+      gsap.to(searchButtonRef.current, { scale: 1.2 });
     }
   };
 
   const handleMouseLeave = () => {
     if (searchButtonRef.current) {
-      gsap.to(searchButtonRef.current, { scale: 1, duration: 0.2 });
+      if (gsap.isTweening(searchButtonRef.current)) {
+        gsap.killTweensOf(searchButtonRef.current);
+      }
+      gsap.to(searchButtonRef.current, { scale: 1 });
     }
   };
 
@@ -77,8 +84,8 @@ const App = () => {
     gsap.from(".movie-card", {
       y: -50,
       opacity: 0,
-      duration: 0.5,
       stagger: 0.1,
+      scale: 1.5,
     });
   };
 
