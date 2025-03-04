@@ -30,7 +30,7 @@ const App = () => {
       const response = await axios.get(
         `https://imdb.iamidiotareyoutoo.com/search?q=${searchTerm}`
       );
-      setMovies(response.data.description);
+      setMovies(response.data.description || []);
     } catch (error) {
       Swal.fire({
         icon: "error",
@@ -40,9 +40,14 @@ const App = () => {
       setMovies([]);
     } finally {
       setLoading(false);
-      animateMovies();
     }
   };
+
+  useEffect(() => {
+    if (movies.length > 0) {
+      animateMovies();
+    }
+  }, [movies]);
 
   const handleSearch = () => {
     if (searchButtonRef.current) {
@@ -64,18 +69,14 @@ const App = () => {
 
   const handleMouseEnter = () => {
     if (searchButtonRef.current) {
-      if (gsap.isTweening(searchButtonRef.current)) {
-        gsap.killTweensOf(searchButtonRef.current);
-      }
+      gsap.killTweensOf(searchButtonRef.current);
       gsap.to(searchButtonRef.current, { scale: 1.2 });
     }
   };
 
   const handleMouseLeave = () => {
     if (searchButtonRef.current) {
-      if (gsap.isTweening(searchButtonRef.current)) {
-        gsap.killTweensOf(searchButtonRef.current);
-      }
+      gsap.killTweensOf(searchButtonRef.current);
       gsap.to(searchButtonRef.current, { scale: 1 });
     }
   };
@@ -114,9 +115,9 @@ const App = () => {
 
       <div className="movie-list">
         {movies.length > 0 ? (
-          movies.map((movie) => (
-            <div key={movie.id} className="movie-card">
-              <img src={movie["#IMG_POSTER"]} alt={movie.title} />
+          movies.map((movie, index) => (
+            <div key={movie.id || index} className="movie-card">
+              <img src={movie["#IMG_POSTER"]} alt={movie["#TITLE"]} />
               <h2>{movie["#TITLE"]}</h2>
               <div className="name">
                 <p>{movie["#YEAR"]}</p>
